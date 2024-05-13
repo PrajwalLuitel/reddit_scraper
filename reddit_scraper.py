@@ -21,7 +21,8 @@ def scrape_subreddit(subreddit_link):
     # Assuming you want to scrape top-level comments only
     submission.comments.replace_more(limit=0)  # This line removes MoreComments objects
     for comment in submission.comments.list():
-        comments_list.append({'username': comment.author.name, 'comment': comment.body})
+        username = comment.author.name if comment.author else "N/A"
+        comments_list.append({'username': username, 'comment': comment.body})
     
     return post_content, comments_list
 
