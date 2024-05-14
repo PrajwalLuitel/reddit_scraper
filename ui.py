@@ -1,30 +1,4 @@
-import praw
 import streamlit as st
-
-# Initialize Praw with your Reddit credentials
-reddit = praw.Reddit(
-    client_id='2DtPhbSH-8UjkuhSSLA1Ng',
-    client_secret='TV2Dt46SQQqSz3hEeIjMN2KdpWagqg',
-    user_agent='ZestyclosePolicy9975'
-)
-
-# Function to scrape comments from a given subreddit link
-def scrape_subreddit(subreddit_link):
-    comments_list = []
-    post_content = {}
-    submission = reddit.submission(url=subreddit_link)
-    
-    post_content['title'] = submission.title
-    post_content['score'] = submission.score
-    post_content['body'] = submission.selftext
-
-    # Assuming you want to scrape top-level comments only
-    submission.comments.replace_more(limit=0)  # This line removes MoreComments objects
-    for comment in submission.comments.list():
-        username = comment.author.name if comment.author else "N/A"
-        comments_list.append({'username': username, 'comment': comment.body})
-    
-    return post_content, comments_list
 
 # Function to display comments using Streamlit
 def display_comments(post_content, comments_list):
@@ -41,6 +15,7 @@ def display_comments(post_content, comments_list):
         st.write(f"**Comment:** {comment['comment']}")
         st.write("---")
 
+
 # Main function to run the app
 def main():
     st.title('Reddit Comments Scraper')
@@ -55,5 +30,16 @@ def main():
         else:
             st.write("Please enter a valid subreddit link.")
 
-if __name__ == "__main__":
-    main()
+
+    # Lead generator example template code
+    st.title('Reddit Lead Generator')
+
+    subreddit_name = st.text_input('Enter the subreddit name:', 'web development')
+    while " " in subreddit_name:
+        subreddit_name = subreddit_name.replace(" ", "+")
+
+    if st.button('Scrape Leads'):
+        leads = scrape_subreddit(subreddit_name)
+        st.write('Leads from r/{}:'.format(subreddit_name))
+        for lead in leads:
+            st.write(lead)
