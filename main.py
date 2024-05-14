@@ -1,5 +1,5 @@
 from typing import Any
-from src.topic_identifier import TopicIdentifier
+from topic_link_identifier import TopicLinkIdentifier
 from src.scraper import Scraper
 from src.keywords_and_clustering import KeywordsIdentifier, UserClustering
 
