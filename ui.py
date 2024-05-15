@@ -1,12 +1,11 @@
 import streamlit as st
 
+
+from main import LeadsGenerator
+
+
 # Function to display comments using Streamlit
-def display_comments(post_content, comments_list):
-    st.subheader("Post: ")
-    st.write(f"**Post Title:** {post_content['title']}")
-    st.write(f"**Score:** {post_content['score']}")
-    st.write(f"**Post Body:** {post_content['body']}")
-    st.write("---")  # Separator line for post content
+def display_comments(comments_list):
     st.subheader("Comments: ")
     st.write("---")
 
@@ -16,30 +15,36 @@ def display_comments(post_content, comments_list):
         st.write("---")
 
 
+def display_data(data):
+    for i, d in enumerate(data):
+        st.markdown(f'### Cluster {i+1}')
+        st.markdown('**The usernames are:** \n* ' + '\n* '.join(d['users']))
+        st.markdown('**The things they are most interested in are:** \n* ' + '\n* '.join(d['keywords']))
+
 # Main function to run the app
 def main():
-    st.title('Reddit Comments Scraper')
-    
-    # Input area for subreddit link
-    subreddit_link = st.text_input('Enter the subreddit link:')
-    
-    if st.button('Scrape Comments'):
-        if subreddit_link:
-            post_content, comments_list = scrape_subreddit(subreddit_link)
-            display_comments(post_content, comments_list)
-        else:
-            st.write("Please enter a valid subreddit link.")
 
-
+    leads_generator = LeadsGenerator()
     # Lead generator example template code
     st.title('Reddit Lead Generator')
 
-    subreddit_name = st.text_input('Enter the subreddit name:', 'web development')
+    subreddit_name = st.text_input('Please enter the subreddit name:', 'web development')
     while " " in subreddit_name:
         subreddit_name = subreddit_name.replace(" ", "+")
 
-    if st.button('Scrape Leads'):
-        leads = scrape_subreddit(subreddit_name)
-        st.write('Leads from r/{}:'.format(subreddit_name))
-        for lead in leads:
-            st.write(lead)
+    if st.button('Fetch Leads'):
+        topic_links_list, users_and_comments, cluster_keywords_and_users = leads_generator(subreddit_name)
+
+        with st.expander("Related subreddits: "):
+            leads = topic_links_list
+            st.write('Leads from r/{}:'.format(subreddit_name))
+            for lead in leads:
+                st.write(lead)
+    
+        with st.expander("Users and their Comments: "):
+            display_comments(users_and_comments)
+        
+        display_data(cluster_keywords_and_users)
+
+if __name__=="__main__":
+    main()
