@@ -18,8 +18,12 @@ def display_comments(comments_list):
 def display_data(data):
     for i, d in enumerate(data):
         st.markdown(f'### Cluster {i+1}')
-        st.markdown('**The usernames are:** \n* ' + '\n* '.join(d['users']))
-        st.markdown('**The things they are most interested in are:** \n* ' + '\n* '.join(d['keywords']))
+        st.write(f"There are {len(d['users'])} users in this cluster")
+        with st.expander("Users"):
+            st.markdown("* "+'\n* '.join(d['users']))
+
+        with st.expander("Keywords"):
+            st.markdown("* "+'\n* '.join(d['keywords']))
 
 # Main function to run the app
 def main():

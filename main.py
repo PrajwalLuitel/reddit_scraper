@@ -30,9 +30,13 @@ class LeadsGenerator:
         except KeyError:
             pass
         
-        keywords = KeywordsIdentifier()(all_comments, len(all_comments)*5)
+        min_keywords = 100
+        min_clusters = 5
 
-        clusters, user_clusters = UserClustering()(users_and_comments, len(keywords)*0.05, keywords)
+
+        keywords = KeywordsIdentifier()(all_comments, max(min_keywords,len(all_comments)//5))
+
+        clusters, user_clusters = UserClustering()(users_and_comments, max(min_clusters,int(len(keywords)*0.05)), keywords)
 
 
         # Iterate over each cluster and store the data in the format as below:
